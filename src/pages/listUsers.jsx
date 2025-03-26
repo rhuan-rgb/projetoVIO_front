@@ -39,9 +39,9 @@ function listUsers() {
     );
   });
 
-  function logout(){
-    localStorage.removeItem("authenticated")
-    navigate('/')
+  function logout() {
+    localStorage.removeItem("authenticated");
+    navigate("/");
   }
 
   useEffect(() => {
@@ -73,7 +73,13 @@ function listUsers() {
               <TableBody>{listUsers}</TableBody>
             </Table>
           </TableContainer>
-          <Button fullWidth variant="contained" component={Link} to="/" onClick={logout}>
+          <Button
+            fullWidth
+            variant="contained"
+            component={Link}
+            to="/"
+            onClick={logout}
+          >
             SAIR
           </Button>
         </div>

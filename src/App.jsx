@@ -3,6 +3,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ListUsers from "./pages/listUsers";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
+import ListEvento from "./pages/listEvento"
+
 function App() {
   return (
     <div>
@@ -15,6 +17,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ListUsers />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/evento"
+            element={
+              <ProtectedRoute>
+                <ListEvento />
               </ProtectedRoute>
             }
           />

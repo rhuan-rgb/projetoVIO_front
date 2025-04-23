@@ -13,7 +13,7 @@ import api from "../axios/axios";
 import { Button, IconButton, Alert, Snackbar } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import DeleteIcon from "@mui/icons-material/Delete";
+import ConfirmDelete from "../components/ConfirmDelete"
 
 function listUsers() {
   const [users, setUsers] = useState([]);
@@ -27,6 +27,11 @@ function listUsers() {
     //mensagem que será exibida
     message: "",
   });
+
+
+  const [userToDelete, setUserToDelete] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+
   // função para exibir o alerta
   const showAlert = (severity, message) => {
     setAlert({ open: true, severity, message });
@@ -36,6 +41,11 @@ function listUsers() {
   const handleCloseAlert = () => {
     setAlert({ ...alert, open: false });
   };
+
+  const openDeleteModal = (id,name) => {
+    setUserToDelete ({id: id, name: name});
+    setModalOpen(true);
+  }
 
   const navigate = useNavigate();
   async function getUsers() {
@@ -51,14 +61,16 @@ function listUsers() {
     );
   }
 
-  async function deleteUser(id) {
+  async function deleteUser() {
     try {
-      await api.deleteUser(id);
+      await api.deleteUser(userToDelete.id);
       await getUsers();
       showAlert("success", "Usuário excluído com sucesso!");
+      setModalOpen(false);
     } catch (error) {
       console.log("Erro ao deletar usuário...", error);
       showAlert("error", error.response.data.error);
+      setModalOpen(false);
     }
   }
   const listUsers = users.map((user) => {
@@ -69,7 +81,7 @@ function listUsers() {
         <TableCell align="center">{user.cpf}</TableCell>
 
         <TableCell align="center">
-          <IconButton onClick={() => deleteUser(user.id_usuario)}>
+          <IconButton onClick={() => openDeleteModal(user.id_usuario, user.name)}>
             <DeleteOutlineIcon color="error" />
           </IconButton>
         </TableCell>
@@ -105,6 +117,12 @@ function listUsers() {
           {alert.message}
         </Alert>
       </Snackbar>
+      <ConfirmDelete
+      open={modalOpen}
+      userName={userToDelete.name}
+      onConfirm={deleteUser}
+      onClose={()=>setModalOpen(false)}
+      />
 
       {/* em React, é possível utilizar "?" e ":" como "if" e "else", respectivamente*/}
       {users.length === 0 ? (

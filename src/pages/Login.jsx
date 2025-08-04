@@ -30,12 +30,9 @@ function Login() {
     await api.postLogin(user).then(
       (response)=>{
         alert(response.data.message)
-          {/* "localStorage é uma variável nativa que funciona como uma memória (um 'storage', armazém)
-          da página. Ela possui funções nativas, como o setItem e o getItem, que manipulam as informações
-          guardadas nela. "setItem" armazena um dado no localStorage como se fosse uma varíavel.
-          Para isso, utiliza-se 2 parâmetros: setItem('nome_da_variavel', valor) */}
         localStorage.setItem('authenticated',true)
-        navigate("users/")
+        localStorage.setItem('token',response.data.token)
+        navigate("CreateEvent/")
       },
     (error)=>{
       console.log(error)

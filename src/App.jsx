@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute";
+
 import ListUsers from "./pages/listUsers";
 import Login from "./pages/Login";
 import Cadastro from "./pages/Cadastro";
-import ListEvento from "./pages/listEvento"
+import ListEventos from "./pages/listEventos";
+import ProtectedRoute from "./components/ProtectedRoute";
+import CreateEvent from "./pages/CreateEvent";
 
 function App() {
   return (
@@ -17,16 +19,26 @@ function App() {
             element={
               <ProtectedRoute>
                 <ListUsers />
+                {/* esse é o children */}
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="eventos"
+            element={
+              <ProtectedRoute>
+                <ListEventos/>
               </ProtectedRoute>
             }
           />
           <Route
-            path="/evento"
-            element={
-              <ProtectedRoute>
-                <ListEvento />
-              </ProtectedRoute>
-            }
+          path="/CreateEvent"
+          element={
+            
+              <CreateEvent/>
+            
+          }
           />
         </Routes>
       </BrowserRouter>

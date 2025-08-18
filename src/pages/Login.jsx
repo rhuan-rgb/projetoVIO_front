@@ -7,8 +7,10 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { Link , useNavigate} from "react-router-dom";
-import { useState } from "react";
+import {Alert, Snackbar} from "@mui/material";
+import { useState, useEffect } from "react";
 import api from "../axios/axios"
+
 
 function Login() {
   const [user, setUser] = useState({
@@ -27,22 +29,58 @@ function Login() {
   };
 
   async function login(){
-    await api.postLogin(user).then(
-      (response)=>{
-        alert(response.data.message)
-        localStorage.setItem('authenticated',true)
-        localStorage.setItem('token',response.data.token)
-        navigate("CreateEvent/")
-      },
-    (error)=>{
+    try {
+      const response = await api.postLogin(user)
+      showAlert("sucess", response.data.message)
+        if (response.data.token){
+          localStorage.setItem('authenticated',true)
+          localStorage.setItem('token',response.data.token)
+          navigate("CreateEvent/")
+        }
+    } catch{
       console.log(error)
-      alert(error.response.data.error)
+      showAlert("sucess", error.response.data.error);
     }
-    )
   }
+
+  useEffect(()=>{
+    const refreshToken = localStorage.getItem("refresh_token");
+    if(refreshToken){
+      showAlert("warning", "Sua sessão expirou. Faça login novamente")
+    }
+  }, [])
+
+  const [alert, setAlert] = useState({
+    // visibilidade (false = oculto; true = visivel)
+    open: false,
+    // nivel do alerta(succes, error, warning, etc)
+    severity: "",
+    // msg q sera exibida
+    message: "",
+  });
+
+  const showAlert = (severity, message) => {
+    setAlert({ open: true, severity, message });
+    localStorage.removeItem("refresh_token");
+  };
+
+  const handleCloseAlert = () => {
+    // Manipulando apenas o open
+    setAlert({ ...alert, open: false });
+  };
 
   return (
     <Container component="main" maxWidth="xl">
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={3000}
+        onClose={handleCloseAlert}
+        anchorOrigin={{vertical:"top", horizontal:"center"}}
+      >
+        <Alert onClose={handleCloseAlert} severity={alert.severity} sx={{width:"100%"}}>
+          {alert.message}
+        </Alert>
+      </Snackbar>
       <Box
         sx={{
           marginTop: 8,

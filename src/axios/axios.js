@@ -53,10 +53,10 @@ const sheets = {
         if(imagem) data.append("imagem", imagem);
 
         return api.post("/evento", data, {
-            headers:{
-                "Content-Type":"multipart/form-data",
-                Accept:"application/json",
-            }
+            headers: {
+                "Content-Type": "multpart/form-data",
+                Accept: "application/json",
+              },
         })
     }
     

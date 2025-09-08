@@ -41,13 +41,14 @@ function App() {
             
           }
           />
-        </Routes> 
           <Route
             path="/dashboard"
             element={<ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>}
           />
+        </Routes> 
+          
       </BrowserRouter>
     </div>
   );
